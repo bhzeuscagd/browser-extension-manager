@@ -2,12 +2,64 @@
 import Icons from "../components/UI/Icons.astro";
 ---
 
-<div class="bg-yellow-300 flex justify-between items-center">
+<div
+    class="flex justify-between items-center p-2 bg-neutral-100 dark:bg-neutral-800 filter-transition shadow-md rounded-lg mx-2 my-4"
+>
     <div>
-        <Icons name="logo" class="w-10 h-auto" />
+        <Icons
+            name="logo"
+            class="w-32 h-auto text-neutral-900 dark:text-neutral-100 filter-transition"
+        />
     </div>
-    <div>
-        <Icons name="icon-moon" class="w-2 h-auto" />
-        <Icons name="icon-sun" class="w-8 h-auto hidden" />
-    </div>
+    <button
+        id="theme-toggle"
+        class="group relative flex items-center justify-center rounded-lg bg-neutral-300 dark:bg-neutral-600 transition-colors duration-900 ease-in-out hover:bg-neutral-400 dark:hover:bg-neutral-500 p-4"
+        aria-label="Toggle theme"
+    >
+        <div
+            class="absolute transition-all duration-900 ease-[cubic-bezier(0.175,0.885,0.32,1.275)] rotate-0 scale-100 opacity-100 dark:rotate-90 dark:scale-0 dark:opacity-0"
+        >
+            <Icons name="icon-moon" class="w-5 h-auto" />
+        </div>
+        <div
+            class="absolute transition-all duration-500 ease-[cubic-bezier(0.6,-0.28,0.735,0.045)] rotate-90 scale-0 opacity-0 dark:rotate-0 dark:scale-100 dark:opacity-100"
+        >
+            <Icons name="icon-sun" class="w-5 h-auto" />
+        </div>
+    </button>
 </div>
+
+<script is="inline">
+    // Lógica para manejar el tema (Oscuro/Claro)
+    const themeToggleBtn = document.getElementById("theme-toggle");
+
+    // 1. Revisar preferencia guardada o del sistema
+    const theme = (() => {
+        if (
+            typeof localStorage !== "undefined" &&
+            localStorage.getItem("theme")
+        ) {
+            return localStorage.getItem("theme");
+        }
+        if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
+            return "dark";
+        }
+        return "light";
+    })();
+
+    // 2. Aplicar el tema inicial
+    if (theme === "dark") {
+        document.documentElement.classList.add("dark");
+    } else {
+        document.documentElement.classList.remove("dark");
+    }
+
+    // 3. Manejar el clic
+    themeToggleBtn?.addEventListener("click", () => {
+        const element = document.documentElement;
+        element.classList.toggle("dark");
+
+        const isDark = element.classList.contains("dark");
+        localStorage.setItem("theme", isDark ? "dark" : "light");
+    });
+</script>
