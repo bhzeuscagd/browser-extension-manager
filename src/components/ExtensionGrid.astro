@@ -1,0 +1,25 @@
+---
+import ExtensionCard from "./ExtensionCard.astro";
+import data from "../data/data.json";
+
+interface DataItem {
+    logo: string;
+    name: string;
+    description: string;
+    isActive: boolean;
+}
+
+const items: DataItem[] = data;
+---
+
+<ul
+    class="grid grid-cols-1 md:grid-cols-2 gap-4 list-none justify-items-center"
+>
+    {
+        items.map((item) => (
+            /* Truco Pro: Usar {...item} pasa todas las propiedades del objeto 
+           automáticamente como props al componente hijo */
+            <ExtensionCard {...item} />
+        ))
+    }
+</ul>

@@ -1,16 +1,27 @@
 ---
 import Icons from "./UI/Icons.astro";
+
+interface Props {
+    logo: string;
+    name: string;
+    description: string;
+    isActive: boolean;
+}
+
+const { logo, name, description, isActive } = Astro.props;
 ---
 
-<div class="flex flex-col gap-2 p-4 rounded-lg shadow-sm bg-neutral-0 m-2">
+<li
+    class="flex flex-col gap-2 p-4 rounded-lg shadow-sm bg-neutral-0 m-2 max-w-[330px]"
+>
     <div class="flex gap-4">
         <div>
-            <Icons name="logo-devlens" class="w-12 h-12" />
+            <Icons name={logo} class="w-12 h-12" />
         </div>
         <div class="flex flex-col gap-1">
-            <h2 class="text-xl font-semibold">Devlens</h2>
+            <h2 class="text-xl font-semibold">{name}</h2>
             <p class="text-neutral-600">
-                Quickly inspect page layouts and visualize element boundaries.
+                {description}
             </p>
         </div>
     </div>
@@ -18,7 +29,7 @@ import Icons from "./UI/Icons.astro";
         <button class="button-filter bg-neutral-0 font-semibold">Remove</button>
         <label class="inline-flex items-center cursor-pointer">
             <!-- 1. Input oculto con clase 'peer' -->
-            <input type="checkbox" value="" class="sr-only peer" />
+            <input type="checkbox" checked={isActive} class="sr-only peer" />
 
             <!-- 2. Contenedor visual -->
             <!-- peer-focus: ring para accesibilidad con teclado -->
@@ -29,4 +40,4 @@ import Icons from "./UI/Icons.astro";
             </div>
         </label>
     </div>
-</div>
+</li>
