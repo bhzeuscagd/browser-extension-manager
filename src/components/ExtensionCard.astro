@@ -1,0 +1,32 @@
+---
+import Icons from "./UI/Icons.astro";
+---
+
+<div class="flex flex-col gap-2 p-4 rounded-lg shadow-sm bg-neutral-0 m-2">
+    <div class="flex gap-4">
+        <div>
+            <Icons name="logo-devlens" class="w-12 h-12" />
+        </div>
+        <div class="flex flex-col gap-1">
+            <h2 class="text-xl font-semibold">Devlens</h2>
+            <p class="text-neutral-600">
+                Quickly inspect page layouts and visualize element boundaries.
+            </p>
+        </div>
+    </div>
+    <div class="flex justify-between items-center">
+        <button class="button-filter bg-neutral-0 font-semibold">Remove</button>
+        <label class="inline-flex items-center cursor-pointer">
+            <!-- 1. Input oculto con clase 'peer' -->
+            <input type="checkbox" value="" class="sr-only peer" />
+
+            <!-- 2. Contenedor visual -->
+            <!-- peer-focus: ring para accesibilidad con teclado -->
+            <!-- peer-checked: cambia color de fondo y mueve el círculo -->
+            <div
+                class="relative w-10 h-5 bg-neutral-400 peer-focus:outline-none peer-focus:ring-1 peer-focus:ring-neutral-600 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-red-600"
+            >
+            </div>
+        </label>
+    </div>
+</div>
