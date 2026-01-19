@@ -35,6 +35,15 @@
 }
 
 @layer components {
+  /*
+   * CUSTOM FOCUS RING / ANILLO DE FOCO PERSONALIZADO
+   * Applies a red ring outside the element on focus.
+   * Aplica un anillo rojo fuera del elemento al recibir el foco.
+   */
+  .focus-ring {
+    @apply focus-visible:outline-none focus:outline-none focus-visible:ring-2 focus-visible:ring-red-600 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-neutral-900;
+  }
+
   .button-filter {
     @apply rounded-full bg-neutral-100 text-sm border border-neutral-400 dark:bg-neutral-700 dark:border-neutral-600 dark:text-neutral-100 px-4 py-2 cursor-pointer;
   }
