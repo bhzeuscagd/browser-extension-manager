@@ -49,6 +49,7 @@ const { logo, name, description, isActive } = Astro.props;
                 checked={isActive}
                 class="sr-only peer"
                 data-name={name}
+                aria-label={`Toggle ${name}`}
             />
 
             <!-- 
