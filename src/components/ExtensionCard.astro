@@ -12,28 +12,49 @@ const { logo, name, description, isActive } = Astro.props;
 ---
 
 <li
-    class="flex flex-col gap-2 p-4 rounded-lg shadow-sm bg-neutral-0 m-2 max-w-[330px]"
+    data-status={isActive.toString()}
+    class="flex flex-col justify-between gap-2 p-4 rounded-2xl shadow-sm bg-neutral-0 m-2 max-w-[330px] min-h-[190px] dark:bg-neutral-800 dark:text-neutral-100 dark:border-neutral-200 dark:border filter-transition"
 >
+    <!-- Card Header: Icon & Title / Cabecera: Icono y Título -->
     <div class="flex gap-4">
         <div>
             <Icons name={logo} class="w-12 h-12" />
         </div>
         <div class="flex flex-col gap-1">
-            <h2 class="text-xl font-semibold">{name}</h2>
-            <p class="text-neutral-600">
+            <h2 class="text-xl font-semibold lg:text-lg">{name}</h2>
+            <p class="text-neutral-600 dark:text-neutral-400 lg:text-xs">
                 {description}
             </p>
         </div>
     </div>
-    <div class="flex justify-between items-center">
-        <button class="button-filter bg-neutral-0 font-semibold">Remove</button>
-        <label class="inline-flex items-center cursor-pointer">
-            <!-- 1. Input oculto con clase 'peer' -->
-            <input type="checkbox" checked={isActive} class="sr-only peer" />
 
-            <!-- 2. Contenedor visual -->
-            <!-- peer-focus: ring para accesibilidad con teclado -->
-            <!-- peer-checked: cambia color de fondo y mueve el círculo -->
+    <!-- Card Footer: Actions / Pie: Acciones -->
+    <div class="flex justify-between items-center">
+        <!-- Remove Button / Botón de Eliminar -->
+        <!-- Logic handled by ExtensionGrid via delegation / Lógica manejada por ExtensionGrid vía delegación -->
+        <button
+            class="btn-remove button-filter bg-neutral-0 font-semibold dark:bg-neutral-800"
+            data-name={name}>Remove</button
+        >
+
+        <!-- Toggle Switch / Interruptor -->
+        <label class="inline-flex items-center cursor-pointer">
+            <!-- 
+              1. Hidden Input / Input Oculto 
+              - Stores state / Guarda el estado
+              - 'peer' allows siblings to react to its state / 'peer' permite a los hermanos reaccionar a su estado
+            -->
+            <input
+                type="checkbox"
+                checked={isActive}
+                class="sr-only peer"
+                data-name={name}
+            />
+
+            <!-- 
+              2. Visual Container / Contenedor Visual 
+              - Reacts to 'peer-checked' / Reacciona a 'peer-checked'
+            -->
             <div
                 class="relative w-10 h-5 bg-neutral-400 peer-focus:outline-none peer-focus:ring-1 peer-focus:ring-neutral-600 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-red-600"
             >

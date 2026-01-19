@@ -2,22 +2,34 @@
 
 ---
 
-<section class="flex flex-col gap-4 justify-between items-center">
+<section class="flex flex-col gap-4 justify-between items-center lg:flex-row">
     <div>
         <h1 class="text-2xl font-bold dark:text-white">Extension List</h1>
     </div>
     <div>
         <ul class="flex gap-4">
             <li>
-                <button class="button-filter selected filter-transition"
-                    >All</button
+                <label
+                    for="all"
+                    class="button-filter filter-transition
+                [.group:has(#all:checked)_&]:bg-red-600"
+                    >All</label
                 >
             </li>
             <li>
-                <button class="button-filter filter-transition">Active</button>
+                <label
+                    for="active"
+                    class="button-filter filter-transition
+                [.group:has(#active:checked)_&]:bg-red-600"
+                    >Active</label
+                >
             </li>
             <li>
-                <button class="button-filter filter-transition">Inactive</button
+                <label
+                    for="inactive"
+                    class="button-filter filter-transition
+                [.group:has(#inactive:checked)_&]:bg-red-600"
+                    >Inactive</label
                 >
             </li>
         </ul>

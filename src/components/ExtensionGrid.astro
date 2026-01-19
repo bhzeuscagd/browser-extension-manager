@@ -12,14 +12,142 @@ interface DataItem {
 const items: DataItem[] = data;
 ---
 
-<ul
-    class="grid grid-cols-1 md:grid-cols-2 gap-4 list-none justify-items-center"
->
-    {
-        items.map((item) => (
-            /* Truco Pro: Usar {...item} pasa todas las propiedades del objeto 
-           automáticamente como props al componente hijo */
-            <ExtensionCard {...item} />
-        ))
+<div class="group w-full max-w-[1200px] mx-auto p-4 lg:px-0 py-6">
+    <!-- input de control -->
+    <input
+        type="radio"
+        name="ext-filter"
+        id="all"
+        class="peer/all hidden"
+        checked
+    />
+    <input
+        type="radio"
+        name="ext-filter"
+        id="active"
+        class="peer/active hidden"
+    />
+    <input
+        type="radio"
+        name="ext-filter"
+        id="inactive"
+        class="peer/inactive hidden"
+    />
+    <ul
+        id="extension-list"
+        class="grid grid-cols-1 md:grid-cols-2 gap-4 list-none justify-items-center
+            peer-checked/active:[&_li[data-status=false]]:hidden
+        peer-checked/inactive:[&_li[data-status=true]]:hidden
+        lg:grid-cols-3 lg:gap-0"
+    >
+        {
+            items.map((item) => (
+                /* 
+                   SPREAD PROPS / PROPAGACIÓN DE PROPIEDADES
+                   Passes all object properties as individual props to the child component.
+                   Pasa todas las propiedades del objeto como props individuales al componente hijo.
+                */
+                <ExtensionCard {...item} />
+            ))
+        }
+    </ul>
+</div>
+
+<script>
+    const STORAGE_KEY = "extension-states";
+    const REMOVED_KEY = "extension-removed";
+
+    /**
+     * 1. INITIAL LOAD / CARGA INICIAL
+     * ------------------------------------------------------------------
+     * Retrieves saved preferences from localStorage to restore UI state.
+     * Recupera las preferencias guardadas del localStorage para restaurar el estado de la UI.
+     */
+    const savedStates = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
+    const removedStates = JSON.parse(localStorage.getItem(REMOVED_KEY) || "{}");
+
+    // Restore Checkboxes & Remove Deleted Items
+    // Restaurar Checkboxes y Eliminar Items Borrados
+    const inputs = document.querySelectorAll<HTMLInputElement>(
+        '#extension-list input[type="checkbox"]',
+    );
+    inputs.forEach((input) => {
+        const name = input.getAttribute("data-name");
+
+        // IF DELETED: Remove from DOM immediately to prevent flashing.
+        // SI ESTÁ ELIMINADO: Quitar del DOM inmediatamente para evitar parpadeos.
+        if (name && removedStates[name]) {
+            input.closest("li")?.remove();
+            return;
+        }
+
+        // IF STATE SAVED: Restore checkbox state and visual data attribute.
+        // SI HAY ESTADO GUARDADO: Restaurar estado del checkbox y atributo visual.
+        if (name && savedStates[name] !== undefined) {
+            input.checked = savedStates[name];
+            input
+                .closest("li")
+                ?.setAttribute("data-status", String(savedStates[name]));
+        }
+    });
+
+    const list = document.getElementById("extension-list");
+
+    /**
+     * 2. EVENT DELEGATION / DELEGACIÓN DE EVENTOS
+     * ------------------------------------------------------------------
+     * Uses a single listener on the parent list for better performance.
+     * Usa un solo listener en la lista padre para mejor rendimiento.
+     */
+    if (list) {
+        // A. FILTER CHANGES / CAMBIOS EN FILTROS
+        list.addEventListener("change", (e) => {
+            const target = e.target as HTMLInputElement;
+            if (target.matches('input[type="checkbox"]')) {
+                // UPDATE VISUALS / ACTUALIZAR VISUALES (CSS Filter)
+                target
+                    .closest("li")
+                    ?.setAttribute("data-status", String(target.checked));
+
+                // UPDATE STORAGE / ACTUALIZAR ALMACENAMIENTO
+                const name = target.getAttribute("data-name");
+                if (name) {
+                    const currentStates = JSON.parse(
+                        localStorage.getItem(STORAGE_KEY) || "{}",
+                    );
+                    currentStates[name] = target.checked;
+                    localStorage.setItem(
+                        STORAGE_KEY,
+                        JSON.stringify(currentStates),
+                    );
+                }
+            }
+        });
+
+        // B. REMOVE BUTTONS / BOTONES DE ELIMINAR
+        list.addEventListener("click", (e) => {
+            const target = e.target as HTMLElement;
+            // Handle clicks on internal elements (icons) using .closest()
+            // Manejar clics en elementos internos (iconos) usando .closest()
+            const btn = target.closest(".btn-remove");
+
+            if (btn) {
+                const name = btn.getAttribute("data-name");
+                if (name) {
+                    // REMOVE FROM DOM / ELIMINAR DEL DOM
+                    btn.closest("li")?.remove();
+
+                    // PERSIST REMOVAL / PERSISTIR ELIMINACIÓN
+                    const currentRemoved = JSON.parse(
+                        localStorage.getItem(REMOVED_KEY) || "{}",
+                    );
+                    currentRemoved[name] = true;
+                    localStorage.setItem(
+                        REMOVED_KEY,
+                        JSON.stringify(currentRemoved),
+                    );
+                }
+            }
+        });
     }
-</ul>
+</script>
